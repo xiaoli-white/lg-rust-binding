@@ -4,6 +4,8 @@ use crate::ir::operand::IROperand;
 use crate::ir::types::IRType;
 use std::fmt::{Display, Formatter, Result};
 
+pub trait IRInstruction: IRNode {}
+
 pub struct IRGoto {
     pub target: String,
 }
@@ -25,6 +27,7 @@ impl IRNode for IRGoto {
         visitor.visit_goto(self);
     }
 }
+impl IRInstruction for IRGoto {}
 
 pub struct IRConditionalJump {
     pub is_atomic: bool,
@@ -73,7 +76,7 @@ impl IRNode for IRConditionalJump {
         todo!()
     }
 }
-
+impl IRInstruction for IRConditionalJump {}
 pub struct IRNoOperate {}
 
 impl IRNoOperate {
@@ -93,7 +96,7 @@ impl IRNode for IRNoOperate {
         todo!()
     }
 }
-
+impl IRInstruction for IRNoOperate {}
 pub struct IRReturn {
     pub operand: Box<dyn IROperand>,
 }
@@ -114,3 +117,4 @@ impl IRNode for IRReturn {
         todo!()
     }
 }
+impl IRInstruction for IRReturn {}

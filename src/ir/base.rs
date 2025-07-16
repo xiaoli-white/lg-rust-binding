@@ -5,8 +5,6 @@ pub trait IRNode: fmt::Display {
     fn accept(&self, visitor: &dyn IRVisitor);
 }
 
-pub trait IRInstruction: IRNode {}
-
 pub enum IRCondition {
     Equal,
     NotEqual,

@@ -26,7 +26,7 @@ impl IRNode for IRIntegerType {
         todo!()
     }
 }
-
+impl IRType for IRIntegerType {}
 pub struct IRFloatType {}
 
 impl IRFloatType {
@@ -45,6 +45,7 @@ impl IRNode for IRFloatType {
         todo!()
     }
 }
+impl IRType for IRFloatType {}
 pub struct IRDoubleType {}
 impl IRDoubleType {
     pub fn new() -> Self {
@@ -61,7 +62,7 @@ impl IRNode for IRDoubleType {
         todo!()
     }
 }
-
+impl IRType for IRDoubleType {}
 pub struct IRVoidType {}
 
 impl IRVoidType {
@@ -80,7 +81,7 @@ impl IRNode for IRVoidType {
         todo!()
     }
 }
-
+impl IRType for IRVoidType {}
 pub struct IRPointerType {
     pub base: Box<dyn IRType>,
 }
@@ -100,3 +101,4 @@ impl IRNode for IRPointerType {
         todo!()
     }
 }
+impl IRType for IRPointerType {}
