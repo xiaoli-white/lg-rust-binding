@@ -1,7 +1,7 @@
+use crate::ir::IRVisitor;
 use crate::ir::base::{IRCondition, IRNode};
 use crate::ir::operand::IROperand;
 use crate::ir::types::IRType;
-use crate::ir::IRVisitor;
 use std::fmt::{Display, Formatter, Result};
 
 pub struct IRGoto {
@@ -9,8 +9,8 @@ pub struct IRGoto {
 }
 
 impl IRGoto {
-    pub fn new(target: String) -> IRGoto {
-        IRGoto { target }
+    pub fn new(target: String) -> Self {
+        Self { target }
     }
 }
 
@@ -26,21 +26,21 @@ impl IRNode for IRGoto {
     }
 }
 
-pub struct IRConditionalJump<'a> {
+pub struct IRConditionalJump {
     pub is_atomic: bool,
-    pub _type: &'a dyn IRType,
+    pub _type: Box<dyn IRType>,
     pub condition: IRCondition,
-    pub operand1: &'a dyn IROperand,
-    pub operand2: &'a dyn IROperand,
+    pub operand1: Box<dyn IROperand>,
+    pub operand2: Box<dyn IROperand>,
     pub target: String,
 }
-impl<'a> IRConditionalJump<'a> {
+impl IRConditionalJump {
     pub fn new(
         is_atomic: bool,
-        _type: &'a dyn IRType,
+        _type: Box<dyn IRType>,
         condition: IRCondition,
-        operand1: &'a dyn IROperand,
-        operand2: &'a dyn IROperand,
+        operand1: Box<dyn IROperand>,
+        operand2: Box<dyn IROperand>,
         target: String,
     ) -> Self {
         Self {
@@ -53,7 +53,7 @@ impl<'a> IRConditionalJump<'a> {
         }
     }
 }
-impl Display for IRConditionalJump<'_> {
+impl Display for IRConditionalJump {
     fn fmt(&self, f: &mut Formatter) -> Result {
         let s = (if self.is_atomic { "atomic_" } else { "" }).to_string()
             + &format!(
@@ -68,7 +68,48 @@ impl Display for IRConditionalJump<'_> {
     }
 }
 
-impl IRNode for IRConditionalJump<'_> {
+impl IRNode for IRConditionalJump {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+
+pub struct IRNoOperate {}
+
+impl IRNoOperate {
+    pub fn new() -> Self {
+        IRNoOperate {}
+    }
+}
+
+impl Display for IRNoOperate {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(f, "nop")
+    }
+}
+
+impl IRNode for IRNoOperate {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+
+pub struct IRReturn {
+    pub operand: Box<dyn IROperand>,
+}
+
+impl IRReturn {
+    pub fn new(operand: Box<dyn IROperand>) -> Self {
+        IRReturn { operand }
+    }
+}
+impl Display for IRReturn {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        write!(f, "return {}", self.operand)
+    }
+}
+
+impl IRNode for IRReturn {
     fn accept(&self, visitor: &dyn IRVisitor) {
         todo!()
     }
