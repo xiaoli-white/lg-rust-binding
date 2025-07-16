@@ -1,8 +1,9 @@
 use crate::ir::IRVisitor;
 use crate::ir::base::{IRCondition, IRNode};
-use crate::ir::operand::IROperand;
+use crate::ir::operand::{IROperand, IRVirtualRegister};
 use crate::ir::types::IRType;
-use std::fmt::{Display, Formatter, Result};
+use std::fmt;
+use std::fmt::{Display, Formatter};
 
 pub trait IRInstruction: IRNode {}
 
@@ -17,7 +18,7 @@ impl IRGoto {
 }
 
 impl Display for IRGoto {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "goto {}", self.target)
     }
 }
@@ -57,7 +58,7 @@ impl IRConditionalJump {
     }
 }
 impl Display for IRConditionalJump {
-    fn fmt(&self, f: &mut Formatter) -> Result {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
         let s = (if self.is_atomic { "atomic_" } else { "" }).to_string()
             + &format!(
                 "conditional_jump {} {}, {}, {}, #{}",
@@ -86,7 +87,7 @@ impl IRNoOperate {
 }
 
 impl Display for IRNoOperate {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "nop")
     }
 }
@@ -107,7 +108,7 @@ impl IRReturn {
     }
 }
 impl Display for IRReturn {
-    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         write!(f, "return {}", self.operand)
     }
 }
@@ -118,3 +119,74 @@ impl IRNode for IRReturn {
     }
 }
 impl IRInstruction for IRReturn {}
+
+pub struct IRMalloc {
+    pub size: Box<dyn IROperand>,
+    pub target: Box<IRVirtualRegister>,
+}
+impl IRMalloc {
+    pub fn new(size: Box<dyn IROperand>, target: Box<IRVirtualRegister>) -> Self {
+        IRMalloc { size, target }
+    }
+}
+
+impl Display for IRMalloc {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{} = malloc {}", self.target, self.size)
+    }
+}
+impl IRNode for IRMalloc {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRMalloc {}
+
+pub struct IRFree {
+    pub ptr: Box<dyn IROperand>,
+}
+
+impl IRFree {
+    pub fn new(ptr: Box<dyn IROperand>) -> Self {
+        IRFree { ptr }
+    }
+}
+impl Display for IRFree {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "free {}", self.ptr)
+    }
+}
+impl IRNode for IRFree {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRFree {}
+
+pub struct IRRealloc {
+    pub ptr: Box<dyn IROperand>,
+    pub size: Box<dyn IROperand>,
+    pub target: Box<IRVirtualRegister>,
+}
+
+impl IRRealloc {
+    pub fn new(
+        ptr: Box<dyn IROperand>,
+        size: Box<dyn IROperand>,
+        target: Box<IRVirtualRegister>,
+    ) -> Self {
+        Self { ptr, size, target }
+    }
+}
+impl Display for IRRealloc {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{} = realloc {}, {}", self.target, self.ptr, self.size)
+    }
+}
+
+impl IRNode for IRRealloc {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRRealloc {}
