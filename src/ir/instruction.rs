@@ -190,3 +190,65 @@ impl IRNode for IRRealloc {
     }
 }
 impl IRInstruction for IRRealloc {}
+
+pub struct IRSet {
+    pub _type: Box<dyn IRType>,
+    pub address: Box<dyn IROperand>,
+    pub value: Box<dyn IROperand>,
+}
+impl IRSet {
+    pub fn new(
+        _type: Box<dyn IRType>,
+        address: Box<dyn IROperand>,
+        value: Box<dyn IROperand>,
+    ) -> Self {
+        Self {
+            _type,
+            address,
+            value,
+        }
+    }
+}
+impl Display for IRSet {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "set {}, {}, {}", self._type, self.address, self.value)
+    }
+}
+
+impl IRNode for IRSet {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+
+impl IRInstruction for IRSet {}
+
+pub struct IRGet {
+    pub _type: Box<dyn IRType>,
+    pub address: Box<dyn IROperand>,
+    pub target: Box<IRVirtualRegister>,
+}
+impl IRGet {
+    pub fn new(
+        _type: Box<dyn IRType>,
+        address: Box<dyn IROperand>,
+        target: Box<IRVirtualRegister>,
+    ) -> Self {
+        Self {
+            _type,
+            address,
+            target,
+        }
+    }
+}
+impl Display for IRGet {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{} = get {}, {}", self.target, self._type, self.address)
+    }
+}
+impl IRNode for IRGet {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRGet {}
