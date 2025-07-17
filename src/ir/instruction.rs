@@ -252,3 +252,423 @@ impl IRNode for IRGet {
     }
 }
 impl IRInstruction for IRGet {}
+
+pub struct IRSetVirtualRegister {
+    pub source: Box<dyn IROperand>,
+    pub target: Box<IRVirtualRegister>,
+}
+
+impl IRSetVirtualRegister {
+    pub fn new(source: Box<dyn IROperand>, target: Box<IRVirtualRegister>) -> Self {
+        Self { source, target }
+    }
+}
+impl Display for IRSetVirtualRegister {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{} = {}", self.target, self.source)
+    }
+}
+impl IRNode for IRSetVirtualRegister {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+
+impl IRInstruction for IRSetVirtualRegister {}
+
+pub enum IRTypeCastKind {
+    ZeroExtend,
+    SignExtend,
+    IntToFloat,
+    FloatToInt,
+    FloatExtend,
+}
+impl Display for IRTypeCastKind {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            IRTypeCastKind::ZeroExtend => "zext",
+            IRTypeCastKind::SignExtend => "sext",
+            IRTypeCastKind::IntToFloat => "itof",
+            IRTypeCastKind::FloatToInt => "ftoi",
+            IRTypeCastKind::FloatExtend => "fext",
+        };
+        write!(f, "{}", s)
+    }
+}
+pub struct IRTypeCast {
+    pub kind: IRTypeCastKind,
+    pub original_type: Box<dyn IRType>,
+    pub source: Box<dyn IROperand>,
+    pub target_type: Box<dyn IRType>,
+    pub target: Box<IRVirtualRegister>,
+}
+impl IRTypeCast {
+    pub fn new(
+        kind: IRTypeCastKind,
+        original_type: Box<dyn IRType>,
+        source: Box<dyn IROperand>,
+        target_type: Box<dyn IRType>,
+        target: Box<IRVirtualRegister>,
+    ) -> Self {
+        Self {
+            kind,
+            original_type,
+            source,
+            target_type,
+            target,
+        }
+    }
+}
+impl Display for IRTypeCast {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{} = {} {} {} to {}",
+            self.target, self.kind, self.original_type, self.source, self.target_type
+        )
+    }
+}
+impl IRNode for IRTypeCast {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRTypeCast {}
+
+pub struct IRStackAllocate {
+    pub size: Box<dyn IROperand>,
+    pub target: Box<IRVirtualRegister>,
+}
+impl IRStackAllocate {
+    pub fn new(size: Box<dyn IROperand>, target: Box<IRVirtualRegister>) -> Self {
+        Self { size, target }
+    }
+}
+impl Display for IRStackAllocate {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(f, "{} = stack_alloc {}", self.target, self.size)
+    }
+}
+impl IRNode for IRStackAllocate {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRStackAllocate {}
+pub enum IRCalculateOperator {
+    ADD,
+    SUB,
+    MUL,
+    DIV,
+    MOD,
+    AND,
+    OR,
+    XOR,
+    SHL,
+    SHR,
+    USHR,
+}
+impl Display for IRCalculateOperator {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            IRCalculateOperator::ADD => "add",
+            IRCalculateOperator::SUB => "sub",
+            IRCalculateOperator::MUL => "mul",
+            IRCalculateOperator::DIV => "div",
+            IRCalculateOperator::MOD => "mod",
+            IRCalculateOperator::AND => "and",
+            IRCalculateOperator::OR => "or",
+            IRCalculateOperator::XOR => "xor",
+            IRCalculateOperator::SHL => "shl",
+            IRCalculateOperator::SHR => "shr",
+            IRCalculateOperator::USHR => "ushr",
+        };
+        write!(f, "{}", s)
+    }
+}
+pub struct IRCalculate {
+    pub is_atomic: bool,
+    pub operator: IRCalculateOperator,
+    pub _type: Box<dyn IRType>,
+    pub operand1: Box<dyn IROperand>,
+    pub operand2: Box<dyn IROperand>,
+    pub target: Box<IRVirtualRegister>,
+}
+impl IRCalculate {
+    pub fn new(
+        is_atomic: bool,
+        operator: IRCalculateOperator,
+        _type: Box<dyn IRType>,
+        operand1: Box<dyn IROperand>,
+        operand2: Box<dyn IROperand>,
+        target: Box<IRVirtualRegister>,
+    ) -> Self {
+        Self {
+            is_atomic,
+            operator,
+            _type,
+            operand1,
+            operand2,
+            target,
+        }
+    }
+}
+impl Display for IRCalculate {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{} = {}{} {} {}, {}",
+            self.target,
+            if self.is_atomic { "atomic_" } else { "" },
+            self.operator,
+            self._type,
+            self.operand1,
+            self.operand2
+        )
+    }
+}
+
+impl IRNode for IRCalculate {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRCalculate {}
+pub struct IRIncrease {
+    pub _type: Box<dyn IRType>,
+    pub operand: Box<dyn IROperand>,
+    pub target: Option<Box<IRVirtualRegister>>,
+}
+impl IRIncrease {
+    pub fn new(
+        _type: Box<dyn IRType>,
+        operand: Box<dyn IROperand>,
+        target: Option<Box<IRVirtualRegister>>,
+    ) -> Self {
+        Self {
+            _type,
+            operand,
+            target,
+        }
+    }
+}
+impl Display for IRIncrease {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        if let Some(target) = &self.target {
+            write!(f, "{} = increase {} {}", target, self._type, self.operand)
+        } else {
+            write!(f, "atomic_increase {} {}", self._type, self.operand)
+        }
+    }
+}
+impl IRNode for IRIncrease {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRIncrease {}
+pub struct IRDecrease {
+    pub _type: Box<dyn IRType>,
+    pub operand: Box<dyn IROperand>,
+    pub target: Option<Box<IRVirtualRegister>>,
+}
+impl IRDecrease {
+    pub fn new(
+        _type: Box<dyn IRType>,
+        operand: Box<dyn IROperand>,
+        target: Option<Box<IRVirtualRegister>>,
+    ) -> Self {
+        Self {
+            _type,
+            operand,
+            target,
+        }
+    }
+}
+impl Display for IRDecrease {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        if let Some(target) = &self.target {
+            write!(f, "{} = decrease {} {}", target, self._type, self.operand)
+        } else {
+            write!(f, "atomic_decrease {} {}", self._type, self.operand)
+        }
+    }
+}
+impl IRNode for IRDecrease {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRDecrease {}
+pub struct IRNot {
+    pub is_atomic: bool,
+    pub _type: Box<dyn IRType>,
+    pub operand: Box<dyn IROperand>,
+    pub target: Box<IRVirtualRegister>,
+}
+impl IRNot {
+    pub fn new(
+        is_atomic: bool,
+        _type: Box<dyn IRType>,
+        operand: Box<dyn IROperand>,
+        target: Box<IRVirtualRegister>,
+    ) -> Self {
+        Self {
+            is_atomic,
+            _type,
+            operand,
+            target,
+        }
+    }
+}
+impl Display for IRNot {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{} = {}not {} {}",
+            self.target,
+            if self.is_atomic { "atomic_" } else { "" },
+            self._type,
+            self.operand
+        )
+    }
+}
+impl IRNode for IRNot {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRNot {}
+pub struct IRNegate {
+    pub is_atomic: bool,
+    pub _type: Box<dyn IRType>,
+    pub operand: Box<dyn IROperand>,
+    pub target: Box<IRVirtualRegister>,
+}
+impl IRNegate {
+    pub fn new(
+        is_atomic: bool,
+        _type: Box<dyn IRType>,
+        operand: Box<dyn IROperand>,
+        target: Box<IRVirtualRegister>,
+    ) -> Self {
+        Self {
+            is_atomic,
+            _type,
+            operand,
+            target,
+        }
+    }
+}
+impl Display for IRNegate {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        write!(
+            f,
+            "{} = {}negate {} {}",
+            self.target,
+            if self.is_atomic { "atomic_" } else { "" },
+            self._type,
+            self.operand
+        )
+    }
+}
+impl IRNode for IRNegate {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRNegate {}
+pub struct IRInvoke {
+    pub return_type: Box<dyn IRType>,
+    pub address: Box<dyn IROperand>,
+    pub argument_types: Vec<Box<dyn IRType>>,
+    pub arguments: Vec<Box<dyn IROperand>>,
+    pub target: Option<Box<IRVirtualRegister>>,
+}
+
+impl IRInvoke {
+    pub fn new(
+        return_type: Box<dyn IRType>,
+        address: Box<dyn IROperand>,
+        argument_types: Vec<Box<dyn IRType>>,
+        arguments: Vec<Box<dyn IROperand>>,
+        target: Option<Box<IRVirtualRegister>>,
+    ) -> Self {
+        Self {
+            return_type,
+            address,
+            argument_types,
+            arguments,
+            target,
+        }
+    }
+}
+impl Display for IRInvoke {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let s = if self.argument_types.len() == self.arguments.len() {
+            self.argument_types
+                .iter()
+                .zip(self.arguments.iter())
+                .map(|(t, a)| format!(", [{}, {}]", t, a))
+                .collect::<String>()
+        } else {
+            panic!("argument types and arguments length mismatch")
+        };
+        if let Some(target) = &self.target {
+            write!(
+                f,
+                "{} = invoke {} {}{}",
+                target, self.return_type, self.address, s
+            )
+        } else {
+            write!(f, "invoke {} {}{}", self.return_type, self.address, s)
+        }
+    }
+}
+
+impl IRNode for IRInvoke {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRInvoke {}
+
+pub struct IRAsm {
+    pub code: String,
+    pub types: Vec<Box<dyn IRType>>,
+    pub resources: Vec<Box<dyn IROperand>>,
+    pub names: Vec<String>,
+}
+impl IRAsm {
+    pub fn new(
+        code: String,
+        types: Vec<Box<dyn IRType>>,
+        resources: Vec<Box<dyn IROperand>>,
+        names: Vec<String>,
+    ) -> Self {
+        Self {
+            code,
+            types,
+            resources,
+            names,
+        }
+    }
+}
+impl Display for IRAsm {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        let s = self
+            .types
+            .iter()
+            .zip(self.resources.iter())
+            .zip(self.names.iter())
+            .map(|((t, r), n)| format!(", [{}, {}, {}]", t, r, n))
+            .collect::<String>();
+        write!(f, "asm \"{}\"{}", self.code, s)
+    }
+}
+impl IRNode for IRAsm {
+    fn accept(&self, visitor: &dyn IRVisitor) {
+        todo!()
+    }
+}
+impl IRInstruction for IRAsm {}
