@@ -1,10 +1,10 @@
-use crate::ir::IRVisitor;
 use crate::ir::instruction::IRInstruction;
 use crate::ir::operand::IROperand;
 use crate::ir::structure::IRField;
 use crate::ir::types::IRType;
+use crate::ir::IRVisitor;
 use indexmap::IndexMap;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::BTreeMap;
 use std::fmt;
 
 pub trait IRNode: fmt::Display {
@@ -69,11 +69,16 @@ impl fmt::Display for IRGlobalData {
 }
 impl IRNode for IRGlobalData {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_global_data(self);
     }
 }
 pub struct IRGlobalDataSection {
     pub data: Vec<IRGlobalData>,
+}
+impl IRGlobalDataSection {
+    pub fn new() -> Self {
+        Self { data: vec![] }
+    }
 }
 impl fmt::Display for IRGlobalDataSection {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -90,9 +95,7 @@ impl fmt::Display for IRGlobalDataSection {
 }
 impl IRNode for IRGlobalDataSection {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        for data in &self.data {
-            data.accept(visitor);
-        }
+        visitor.visit_global_data_section(self);
     }
 }
 pub struct IRBasicBlock {
@@ -197,6 +200,6 @@ impl fmt::Display for IRFunction {
 }
 impl IRNode for IRFunction {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_function(self);
     }
 }

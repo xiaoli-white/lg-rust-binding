@@ -74,7 +74,7 @@ impl Display for IRConditionalJump {
 
 impl IRNode for IRConditionalJump {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_conditional_jump(self);
     }
 }
 impl IRInstruction for IRConditionalJump {}
@@ -94,28 +94,32 @@ impl Display for IRNoOperate {
 
 impl IRNode for IRNoOperate {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_no_operate(self);
     }
 }
 impl IRInstruction for IRNoOperate {}
 pub struct IRReturn {
-    pub operand: Box<dyn IROperand>,
+    pub operand: Option<Box<dyn IROperand>>,
 }
 
 impl IRReturn {
-    pub fn new(operand: Box<dyn IROperand>) -> Self {
+    pub fn new(operand: Option<Box<dyn IROperand>>) -> Self {
         IRReturn { operand }
     }
 }
 impl Display for IRReturn {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "return {}", self.operand)
+        if let Some(operand) = &self.operand {
+            write!(f, "return {}", operand)
+        } else {
+            write!(f, "return")
+        }
     }
 }
 
 impl IRNode for IRReturn {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_return(self);
     }
 }
 impl IRInstruction for IRReturn {}
@@ -137,7 +141,7 @@ impl Display for IRMalloc {
 }
 impl IRNode for IRMalloc {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_malloc(self);
     }
 }
 impl IRInstruction for IRMalloc {}
@@ -158,7 +162,7 @@ impl Display for IRFree {
 }
 impl IRNode for IRFree {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_free(self);
     }
 }
 impl IRInstruction for IRFree {}
@@ -186,7 +190,7 @@ impl Display for IRRealloc {
 
 impl IRNode for IRRealloc {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_realloc(self);
     }
 }
 impl IRInstruction for IRRealloc {}
@@ -217,7 +221,7 @@ impl Display for IRSet {
 
 impl IRNode for IRSet {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_set(self);
     }
 }
 
@@ -248,7 +252,7 @@ impl Display for IRGet {
 }
 impl IRNode for IRGet {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_get(self);
     }
 }
 impl IRInstruction for IRGet {}
@@ -270,7 +274,7 @@ impl Display for IRSetVirtualRegister {
 }
 impl IRNode for IRSetVirtualRegister {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_set_virtual_register(self);
     }
 }
 
@@ -330,7 +334,7 @@ impl Display for IRTypeCast {
 }
 impl IRNode for IRTypeCast {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_type_cast(self);
     }
 }
 impl IRInstruction for IRTypeCast {}
@@ -351,7 +355,7 @@ impl Display for IRStackAllocate {
 }
 impl IRNode for IRStackAllocate {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_stack_allocate(self);
     }
 }
 impl IRInstruction for IRStackAllocate {}
@@ -430,7 +434,7 @@ impl Display for IRCalculate {
 
 impl IRNode for IRCalculate {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_calculate(self);
     }
 }
 impl IRInstruction for IRCalculate {}
@@ -463,7 +467,7 @@ impl Display for IRIncrease {
 }
 impl IRNode for IRIncrease {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_increase(self);
     }
 }
 impl IRInstruction for IRIncrease {}
@@ -496,7 +500,7 @@ impl Display for IRDecrease {
 }
 impl IRNode for IRDecrease {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_decrease(self);
     }
 }
 impl IRInstruction for IRDecrease {}
@@ -535,7 +539,7 @@ impl Display for IRNot {
 }
 impl IRNode for IRNot {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_not(self);
     }
 }
 impl IRInstruction for IRNot {}
@@ -574,7 +578,7 @@ impl Display for IRNegate {
 }
 impl IRNode for IRNegate {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_negate(self);
     }
 }
 impl IRInstruction for IRNegate {}
@@ -628,7 +632,7 @@ impl Display for IRInvoke {
 
 impl IRNode for IRInvoke {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_invoke(self);
     }
 }
 impl IRInstruction for IRInvoke {}
@@ -668,7 +672,7 @@ impl Display for IRAsm {
 }
 impl IRNode for IRAsm {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_asm(self);
     }
 }
 impl IRInstruction for IRAsm {}

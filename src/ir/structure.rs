@@ -22,7 +22,7 @@ impl Display for IRField {
 
 impl IRNode for IRField {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_field(self);
     }
 }
 
@@ -52,6 +52,6 @@ impl Display for IRStructure {
 }
 impl IRNode for IRStructure {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_structure(self);
     }
 }

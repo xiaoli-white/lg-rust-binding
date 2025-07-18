@@ -23,7 +23,7 @@ impl Display for IRIntegerType {
 }
 impl IRNode for IRIntegerType {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_integer_type(self);
     }
 }
 impl IRType for IRIntegerType {}
@@ -42,7 +42,7 @@ impl Display for IRFloatType {
 }
 impl IRNode for IRFloatType {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_float_type(self);
     }
 }
 impl IRType for IRFloatType {}
@@ -59,7 +59,7 @@ impl Display for IRDoubleType {
 }
 impl IRNode for IRDoubleType {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_double_type(self);
     }
 }
 impl IRType for IRDoubleType {}
@@ -78,7 +78,7 @@ impl Display for IRVoidType {
 
 impl IRNode for IRVoidType {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_void_type(self);
     }
 }
 impl IRType for IRVoidType {}
@@ -98,7 +98,7 @@ impl Display for IRPointerType {
 }
 impl IRNode for IRPointerType {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_pointer_type(self);
     }
 }
 impl IRType for IRPointerType {}

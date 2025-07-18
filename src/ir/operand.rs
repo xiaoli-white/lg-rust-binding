@@ -23,7 +23,7 @@ impl Display for IRVirtualRegister {
 
 impl IRNode for IRVirtualRegister {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_virtual_register(self);
     }
 }
 
@@ -45,7 +45,7 @@ impl Display for IRConstant {
 }
 impl IRNode for IRConstant {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_constant(self);
     }
 }
 impl IROperand for IRConstant {}
@@ -67,7 +67,7 @@ impl Display for IRMacro {
 }
 impl IRNode for IRMacro {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_macro(self);
     }
 }
 impl IROperand for IRMacro {}
@@ -106,7 +106,7 @@ impl Display for IRPhi {
 
 impl IRNode for IRPhi {
     fn accept(&self, visitor: &dyn IRVisitor) {
-        todo!()
+        visitor.visit_phi(self);
     }
 }
 impl IROperand for IRPhi {}
