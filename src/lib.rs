@@ -1,3 +1,3 @@
 extern crate core;
 
-mod ir;
+pub mod ir;
