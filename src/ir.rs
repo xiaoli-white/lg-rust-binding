@@ -12,11 +12,11 @@ use crate::ir::types::{
 use indexmap::IndexMap;
 use std::fmt::Display;
 
-mod base;
-mod instruction;
-mod operand;
-mod structure;
-mod types;
+pub mod base;
+pub mod instruction;
+pub mod operand;
+pub mod structure;
+pub mod types;
 pub struct IRConstantPoolEntry {
     pub _type: Box<dyn IRType>,
     pub value: Box<dyn Display>,
