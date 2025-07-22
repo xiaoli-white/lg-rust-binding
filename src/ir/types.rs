@@ -3,6 +3,16 @@ use crate::ir::base::IRNode;
 use std::fmt;
 use std::fmt::{Display, Formatter};
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+#[repr(usize)]
+pub enum IRSize {
+    OneBit = 1, // i1
+    OneByte = 8, // i8
+    TwoBytes = 16, // i16
+    FourBytes = 32, // i32
+    EightBytes = 64, // i64
+}
+
 pub trait IRType: IRNode {}
 
 pub struct IRIntegerType {
