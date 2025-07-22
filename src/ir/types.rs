@@ -5,29 +5,30 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[repr(usize)]
-pub enum IRSize {
-    OneBit = 1, // i1
-    OneByte = 8, // i8
-    TwoBytes = 16, // i16
-    FourBytes = 32, // i32
+pub enum IRIntegerTypeSize {
+    OneBit = 1,      // i1
+    OneByte = 8,     // i8
+    TwoBytes = 16,   // i16
+    FourBytes = 32,  // i32
     EightBytes = 64, // i64
 }
 
 pub trait IRType: IRNode {}
 
 pub struct IRIntegerType {
-    pub size: usize,
+    pub size: IRIntegerTypeSize,
     pub unsigned: bool,
 }
 
 impl IRIntegerType {
-    pub fn new(size: usize, unsigned: bool) -> Self {
+    pub fn new(size: IRIntegerTypeSize, unsigned: bool) -> Self {
         Self { size, unsigned }
     }
 }
 impl Display for IRIntegerType {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        let s = if self.unsigned { "u" } else { "i" }.to_owned() + &self.size.to_string();
+        let s = if self.unsigned { "u" } else { "i" }.to_owned()
+            + &(self.size.clone() as usize).to_string();
         write!(f, "{}", s)
     }
 }
