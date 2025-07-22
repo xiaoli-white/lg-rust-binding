@@ -53,16 +53,35 @@ impl IROperand for IRConstant {}
 pub struct IRMacro {
     pub name: String,
     pub args: Vec<String>,
+    pub additional_operands: Vec<Box<dyn IROperand>>,
 }
 
 impl IRMacro {
-    pub fn new(name: String, args: Vec<String>) -> Self {
-        Self { name, args }
+    pub fn new(
+        name: String,
+        args: Vec<String>,
+        additional_operands: Vec<Box<dyn IROperand>>,
+    ) -> Self {
+        Self {
+            name,
+            args,
+            additional_operands,
+        }
     }
 }
 impl Display for IRMacro {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
-        write!(f, "`{}({})", self.name, self.args.join(", "))
+        write!(
+            f,
+            "`{}([{}], [{}])",
+            self.name,
+            self.args.join(", "),
+            self.additional_operands
+                .iter()
+                .map(|operand| operand.to_string())
+                .collect::<Vec<_>>()
+                .join(", ")
+        )
     }
 }
 impl IRNode for IRMacro {

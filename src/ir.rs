@@ -129,7 +129,10 @@ impl IRNode for IRModule {
 }
 pub trait IRVisitor {
     fn visit_dyn(&self, ir_node: &dyn IRNode);
-    fn visit(&self, ir_node: &dyn IRNode) where Self: Sized {
+    fn visit(&self, ir_node: &dyn IRNode)
+    where
+        Self: Sized,
+    {
         ir_node.accept(self);
     }
     fn visit_module(&self, ir_module: &IRModule) {
@@ -306,9 +309,7 @@ pub trait IRVisitor {
     fn visit_macro(&self, ir_macro: &IRMacro) {}
 }
 
-pub trait IRVisitorImpl: IRVisitor {
-
-}
+pub trait IRVisitorImpl: IRVisitor {}
 
 impl<T: IRVisitorImpl + Sized> IRVisitor for T {
     fn visit_dyn(&self, ir_node: &dyn IRNode) {
@@ -317,6 +318,4 @@ impl<T: IRVisitorImpl + Sized> IRVisitor for T {
 }
 
 pub struct IRDumper {}
-impl IRVisitorImpl for IRDumper {
-
-}
+impl IRVisitorImpl for IRDumper {}
