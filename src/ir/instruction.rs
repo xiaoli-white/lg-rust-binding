@@ -283,18 +283,22 @@ impl IRInstruction for IRSetVirtualRegister {}
 pub enum IRTypeCastKind {
     ZeroExtend,
     SignExtend,
+    Truncate,
     IntToFloat,
     FloatToInt,
     FloatExtend,
+    FloatTruncate,
 }
 impl Display for IRTypeCastKind {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         let s = match self {
             IRTypeCastKind::ZeroExtend => "zext",
             IRTypeCastKind::SignExtend => "sext",
+            IRTypeCastKind::Truncate => "trunc",
             IRTypeCastKind::IntToFloat => "itof",
             IRTypeCastKind::FloatToInt => "ftoi",
             IRTypeCastKind::FloatExtend => "fext",
+            IRTypeCastKind::FloatTruncate => "ftrunc",
         };
         write!(f, "{}", s)
     }
