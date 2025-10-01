@@ -35,7 +35,7 @@ pub struct IRConditionalJump {
     pub _type: Box<dyn IRType>,
     pub condition: IRCondition,
     pub operand1: Box<dyn IROperand>,
-    pub operand2: Box<dyn IROperand>,
+    pub operand2: Option<Box<dyn IROperand>>,
     pub target: String,
 }
 impl IRConditionalJump {
@@ -44,7 +44,7 @@ impl IRConditionalJump {
         _type: Box<dyn IRType>,
         condition: IRCondition,
         operand1: Box<dyn IROperand>,
-        operand2: Box<dyn IROperand>,
+        operand2: Option<Box<dyn IROperand>>,
         target: String,
     ) -> Self {
         Self {
@@ -59,15 +59,26 @@ impl IRConditionalJump {
 }
 impl Display for IRConditionalJump {
     fn fmt(&self, f: &mut Formatter) -> fmt::Result {
-        let s = (if self.is_atomic { "atomic_" } else { "" }).to_string()
-            + &format!(
-                "conditional_jump {} {}, {}, {}, #{}",
-                self._type.to_string(),
-                self.condition,
-                self.operand1.to_string(),
-                self.operand2.to_string(),
-                self.target
-            );
+        let s = if let Some(op2) = &self.operand2 {
+            (if self.is_atomic { "atomic_" } else { "" }).to_string()
+                + &format!(
+                    "conditional_jump {} {}, {}, {}, #{}",
+                    self._type.to_string(),
+                    self.condition,
+                    self.operand1.to_string(),
+                    op2.to_string(),
+                    self.target
+                )
+        } else {
+            (if self.is_atomic { "atomic_" } else { "" }).to_string()
+                + &format!(
+                    "conditional_jump {} {}, {}, #{}",
+                    self._type.to_string(),
+                    self.condition,
+                    self.operand1.to_string(),
+                    self.target
+                )
+        };
         write!(f, "{}", s)
     }
 }

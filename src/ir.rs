@@ -203,7 +203,9 @@ pub trait IRVisitor {
     fn visit_conditional_jump(&self, ir_conditional_jump: &IRConditionalJump) {
         self.visit_dyn(ir_conditional_jump._type.as_ref());
         self.visit_dyn(ir_conditional_jump.operand1.as_ref());
-        self.visit_dyn(ir_conditional_jump.operand2.as_ref());
+        if let Some(operand2) = ir_conditional_jump.operand2.as_ref() {
+            self.visit_dyn(operand2.as_ref());
+        }
     }
     fn visit_return(&self, ir_return: &IRReturn) {
         if let Some(operand) = ir_return.operand.as_ref() {
@@ -309,7 +311,9 @@ pub trait IRVisitor {
     fn visit_macro(&self, ir_macro: &IRMacro) {}
 }
 
-pub trait IRVisitorImpl: IRVisitor {}
+pub trait IRVisitorImpl: IRVisitor {
+    fn visit_function(&self, ir_function: &IRFunction);
+}
 
 impl<T: IRVisitorImpl + Sized> IRVisitor for T {
     fn visit_dyn(&self, ir_node: &dyn IRNode) {
@@ -318,4 +322,6 @@ impl<T: IRVisitorImpl + Sized> IRVisitor for T {
 }
 
 pub struct IRDumper {}
-impl IRVisitorImpl for IRDumper {}
+impl IRVisitorImpl for IRDumper {
+    fn visit_function(&self, ir_function: &IRFunction) {}
+}

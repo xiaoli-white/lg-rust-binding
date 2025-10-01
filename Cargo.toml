@@ -8,4 +8,4 @@ indexmap = "2.0"
 
 [lib]
 name = "lg_rust_binding"
-crate-type = ["dylib"]
+crate-type = ["dylib", "staticlib"]

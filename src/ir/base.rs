@@ -18,6 +18,8 @@ pub enum IRCondition {
     LessEqual,
     Greater,
     GreaterEqual,
+    IfTrue,
+    IfFalse,
 }
 impl fmt::Display for IRCondition {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
@@ -28,6 +30,8 @@ impl fmt::Display for IRCondition {
             IRCondition::LessEqual => "le".to_string(),
             IRCondition::Greater => "g".to_string(),
             IRCondition::GreaterEqual => "ge".to_string(),
+            IRCondition::IfTrue => "if_true".to_string(),
+            IRCondition::IfFalse => "if_false".to_string(),
         };
         write!(f, "{}", s)
     }
