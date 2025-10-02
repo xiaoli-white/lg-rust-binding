@@ -3,7 +3,7 @@ use crate::ir::base::IRNode;
 use crate::ir::types::IRType;
 use std::fmt;
 use std::fmt::{Display, Formatter};
-#[derive(Clone,Debug)]
+
 pub struct IRField {
     pub name: String,
     pub _type: Box<dyn IRType>,
@@ -25,7 +25,7 @@ impl IRNode for IRField {
         visitor.visit_field(self);
     }
 }
-#[derive(Clone,Debug)]
+
 pub struct IRStructure {
     pub name: String,
     pub fields: Vec<IRField>,

@@ -3,11 +3,8 @@ use crate::ir::base::IRNode;
 use crate::ir::types::IRType;
 use std::fmt;
 use std::fmt::{Display, Formatter};
-use dyn_clone::clone_trait_object;
 
 pub trait IROperand: IRNode {}
-clone_trait_object!(IROperand);
-#[derive(Clone,Debug)]
 pub struct IRVirtualRegister {
     pub name: String,
 }
@@ -32,7 +29,6 @@ impl IRNode for IRVirtualRegister {
 
 impl IROperand for IRVirtualRegister {}
 
-#[derive(Clone,Debug)]
 pub struct IRConstant {
     pub index: i32,
 }
@@ -54,7 +50,6 @@ impl IRNode for IRConstant {
 }
 impl IROperand for IRConstant {}
 
-#[derive(Clone,Debug)]
 pub struct IRMacro {
     pub name: String,
     pub args: Vec<String>,
@@ -96,7 +91,6 @@ impl IRNode for IRMacro {
 }
 impl IROperand for IRMacro {}
 
-#[derive(Clone,Debug)]
 pub struct IRPhi {
     pub _type: Box<dyn IRType>,
     pub labels: Vec<String>,
@@ -136,7 +130,6 @@ impl IRNode for IRPhi {
 }
 impl IROperand for IRPhi {}
 
-#[derive(Clone,Debug)]
 pub struct IRVirtualTable {
     pub functions: Vec<String>,
 }
@@ -162,7 +155,6 @@ impl IRNode for IRVirtualTable {
     }
 }
 impl IROperand for IRVirtualTable {}
-#[derive(Clone,Debug)]
 pub struct IRInterfaceTableEntry {
     pub name: String,
     pub functions: Vec<String>,
@@ -182,7 +174,6 @@ impl Display for IRInterfaceTableEntry {
         )
     }
 }
-#[derive(Clone,Debug)]
 pub struct IRInterfaceTable {
     pub entries: Vec<IRInterfaceTableEntry>,
 }
