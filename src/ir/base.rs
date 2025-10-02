@@ -106,6 +106,14 @@ pub struct IRBasicBlock {
     pub name: String,
     pub instructions: Vec<Box<dyn IRInstruction>>,
 }
+impl IRBasicBlock {
+    pub fn new(name: String) -> Self {
+        Self {
+            name,
+            instructions: vec![],
+        }
+    }
+}
 impl fmt::Display for IRBasicBlock {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
