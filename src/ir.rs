@@ -41,7 +41,7 @@ pub struct IRConstantPool {
     pub entries: Vec<Box<IRConstantPoolEntry>>,
 }
 impl IRConstantPool {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self { entries: vec![] }
     }
 }

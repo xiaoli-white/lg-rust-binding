@@ -32,7 +32,7 @@ pub struct IRStructure {
 }
 
 impl IRStructure {
-    fn new(name: String, fields: Vec<IRField>) -> Self {
+    pub fn new(name: String, fields: Vec<IRField>) -> Self {
         Self { name, fields }
     }
 }

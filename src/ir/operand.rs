@@ -10,7 +10,7 @@ pub struct IRVirtualRegister {
 }
 
 impl IRVirtualRegister {
-    fn new(name: String) -> Self {
+    pub fn new(name: String) -> Self {
         Self { name }
     }
 }
@@ -33,7 +33,7 @@ pub struct IRConstant {
     pub index: i32,
 }
 impl IRConstant {
-    fn new(index: i32) -> Self {
+    pub fn new(index: i32) -> Self {
         Self { index }
     }
 }
