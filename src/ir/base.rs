@@ -11,6 +11,7 @@ pub trait IRNode: fmt::Display {
     fn accept(&self, visitor: &dyn IRVisitor);
 }
 
+#[derive(Clone, Copy, Debug)]
 pub enum IRCondition {
     Equal,
     NotEqual,
@@ -102,6 +103,8 @@ impl IRNode for IRGlobalDataSection {
         visitor.visit_global_data_section(self);
     }
 }
+
+#[derive(Clone)]
 pub struct IRBasicBlock {
     pub name: String,
     pub instructions: Vec<Box<dyn IRInstruction>>,

@@ -1,3 +1,5 @@
+use clone_dyn::clone_dyn;
+
 use crate::ir::IRVisitor;
 use crate::ir::base::IRNode;
 use std::fmt;
@@ -13,8 +15,10 @@ pub enum IRIntegerTypeSize {
     EightBytes = 64, // i64
 }
 
+#[clone_dyn]
 pub trait IRType: IRNode {}
 
+#[derive(Clone)]
 pub struct IRIntegerType {
     pub size: IRIntegerTypeSize,
     pub unsigned: bool,
@@ -38,6 +42,7 @@ impl IRNode for IRIntegerType {
     }
 }
 impl IRType for IRIntegerType {}
+#[derive(Clone)]
 pub struct IRFloatType {}
 
 impl IRFloatType {
@@ -57,6 +62,7 @@ impl IRNode for IRFloatType {
     }
 }
 impl IRType for IRFloatType {}
+#[derive(Clone)]
 pub struct IRDoubleType {}
 impl IRDoubleType {
     pub fn new() -> Self {
@@ -74,6 +80,7 @@ impl IRNode for IRDoubleType {
     }
 }
 impl IRType for IRDoubleType {}
+#[derive(Clone)]
 pub struct IRVoidType {}
 
 impl IRVoidType {
@@ -93,6 +100,7 @@ impl IRNode for IRVoidType {
     }
 }
 impl IRType for IRVoidType {}
+#[derive(Clone)]
 pub struct IRPointerType {
     pub base: Box<dyn IRType>,
 }

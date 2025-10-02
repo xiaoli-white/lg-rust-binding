@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+clone_dyn = "0.47.0"
 indexmap = "2.0"
 
 [lib]
