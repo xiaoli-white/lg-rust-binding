@@ -10,7 +10,7 @@ use crate::ir::types::{
     IRDoubleType, IRFloatType, IRIntegerType, IRPointerType, IRType, IRVoidType,
 };
 use indexmap::IndexMap;
-use std::fmt::Display;
+use std::fmt::{Debug, Display};
 
 pub mod base;
 pub mod instruction;
@@ -21,14 +21,27 @@ pub struct IRConstantPoolEntry {
     pub _type: Box<dyn IRType>,
     pub value: Box<dyn Display>,
 }
+
 impl IRConstantPoolEntry {
     pub fn new(_type: Box<dyn IRType>, value: Box<dyn Display>) -> Self {
         Self { _type, value }
     }
 }
+
 impl Display for IRConstantPoolEntry {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "Entry{{type={}, value={}}}", self._type, self.value)
+    }
+}
+
+impl Debug for IRConstantPoolEntry {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let mut debug_struct = f.debug_struct("IRConstantPoolEntry");
+
+        debug_struct.field("type", &self._type);
+        debug_struct.field("value", &format!("{}", self.value));
+        
+        debug_struct.finish()
     }
 }
 
@@ -37,6 +50,7 @@ impl IRNode for IRConstantPoolEntry {
         visitor.visit_constant_pool_entry(self)
     }
 }
+#[derive(Debug)]
 pub struct IRConstantPool {
     pub entries: Vec<Box<IRConstantPoolEntry>>,
 }
@@ -67,6 +81,8 @@ impl IRNode for IRConstantPool {
         visitor.visit_constant_pool(self)
     }
 }
+
+#[derive(Debug)]
 pub struct IRModule {
     pub structures: IndexMap<String, Box<IRStructure>>,
     pub constant_pool: Box<IRConstantPool>,
@@ -77,6 +93,7 @@ pub struct IRModule {
     pub name2itable_keys: IndexMap<String, Vec<String>>,
     pub entry_point: Option<String>,
 }
+
 impl IRModule {
     pub fn new() -> Self {
         Self {
@@ -91,6 +108,7 @@ impl IRModule {
         }
     }
 }
+
 impl Display for IRModule {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let s = self

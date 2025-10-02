@@ -38,6 +38,7 @@ impl fmt::Display for IRCondition {
     }
 }
 
+#[derive(Debug)]
 pub struct IRGlobalData {
     pub name: String,
     pub size: Option<Box<dyn IROperand>>,
@@ -77,9 +78,12 @@ impl IRNode for IRGlobalData {
         visitor.visit_global_data(self);
     }
 }
+
+#[derive(Debug)]
 pub struct IRGlobalDataSection {
     pub data: Vec<IRGlobalData>,
 }
+
 impl IRGlobalDataSection {
     pub fn new() -> Self {
         Self { data: vec![] }
@@ -104,11 +108,12 @@ impl IRNode for IRGlobalDataSection {
     }
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct IRBasicBlock {
     pub name: String,
     pub instructions: Vec<Box<dyn IRInstruction>>,
 }
+
 impl IRBasicBlock {
     pub fn new(name: String) -> Self {
         Self {
@@ -138,11 +143,13 @@ impl IRNode for IRBasicBlock {
         }
     }
 }
+#[derive(Debug)]
 pub struct IRControlFlowGraph {
     pub basic_blocks: IndexMap<String, Box<IRBasicBlock>>,
     pub out_edges: BTreeMap<Box<IRBasicBlock>, Vec<Box<IRBasicBlock>>>,
     pub in_edges: BTreeMap<Box<IRBasicBlock>, Vec<Box<IRBasicBlock>>>,
 }
+
 impl IRControlFlowGraph {
     pub fn new() -> Self {
         let basic_blocks = IndexMap::new();
@@ -172,6 +179,7 @@ impl fmt::Display for IRControlFlowGraph {
         )
     }
 }
+#[derive(Debug)]
 pub struct IRFunction {
     pub return_type: Box<dyn IRType>,
     pub name: String,
