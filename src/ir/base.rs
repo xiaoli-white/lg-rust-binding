@@ -1,19 +1,17 @@
-use crate::ir::IRVisitor;
 use crate::ir::instruction::IRInstruction;
 use crate::ir::operand::IROperand;
 use crate::ir::structure::IRField;
 use crate::ir::types::IRType;
+use crate::ir::IRVisitor;
 use indexmap::IndexMap;
 use std::collections::BTreeMap;
 use std::fmt;
-use std::fmt::Debug;
-use dyn_clone::{clone_trait_object, DynClone};
 
-pub trait IRNode: fmt::Display+DynClone+Debug {
+pub trait IRNode: fmt::Display {
     fn accept(&self, visitor: &dyn IRVisitor);
 }
-clone_trait_object!(IRNode);
-#[derive(Clone, Debug)]
+
+#[derive(Clone, Copy, Debug)]
 pub enum IRCondition {
     Equal,
     NotEqual,
@@ -40,7 +38,6 @@ impl fmt::Display for IRCondition {
     }
 }
 
-#[derive(Clone, Debug)]
 pub struct IRGlobalData {
     pub name: String,
     pub size: Option<Box<dyn IROperand>>,
@@ -80,7 +77,6 @@ impl IRNode for IRGlobalData {
         visitor.visit_global_data(self);
     }
 }
-#[derive(Clone, Debug)]
 pub struct IRGlobalDataSection {
     pub data: Vec<IRGlobalData>,
 }
@@ -107,7 +103,8 @@ impl IRNode for IRGlobalDataSection {
         visitor.visit_global_data_section(self);
     }
 }
-#[derive(Clone, Debug)]
+
+#[derive(Clone)]
 pub struct IRBasicBlock {
     pub name: String,
     pub instructions: Vec<Box<dyn IRInstruction>>,
@@ -141,7 +138,6 @@ impl IRNode for IRBasicBlock {
         }
     }
 }
-#[derive(Clone, Debug)]
 pub struct IRControlFlowGraph {
     pub basic_blocks: IndexMap<String, Box<IRBasicBlock>>,
     pub out_edges: BTreeMap<Box<IRBasicBlock>, Vec<Box<IRBasicBlock>>>,
@@ -176,7 +172,6 @@ impl fmt::Display for IRControlFlowGraph {
         )
     }
 }
-#[derive(Clone, Debug)]
 pub struct IRFunction {
     pub return_type: Box<dyn IRType>,
     pub name: String,
