@@ -17,10 +17,12 @@ pub mod instruction;
 pub mod operand;
 pub mod structure;
 pub mod types;
+
 pub struct IRConstantPoolEntry {
     pub _type: Box<dyn IRType>,
     pub value: Box<dyn Display>,
 }
+
 impl IRConstantPoolEntry {
     pub fn new(_type: Box<dyn IRType>, value: Box<dyn Display>) -> Self {
         Self { _type, value }
@@ -61,6 +63,7 @@ impl IRNode for IRConstantPool {
         visitor.visit_constant_pool(self)
     }
 }
+#[derive(Clone,Debug)]
 pub struct IRModule {
     pub structures: IndexMap<String, Box<IRStructure>>,
     pub constant_pool: Box<IRConstantPool>,

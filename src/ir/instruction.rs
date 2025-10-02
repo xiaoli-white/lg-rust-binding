@@ -2,11 +2,13 @@ use crate::ir::IRVisitor;
 use crate::ir::base::{IRCondition, IRNode};
 use crate::ir::operand::{IROperand, IRVirtualRegister};
 use crate::ir::types::IRType;
+use dyn_clone::clone_trait_object;
 use std::fmt;
 use std::fmt::{Display, Formatter};
 
 pub trait IRInstruction: IRNode {}
-
+clone_trait_object!(IRInstruction);
+#[derive(Clone, Debug)]
 pub struct IRGoto {
     pub target: String,
 }
@@ -29,7 +31,7 @@ impl IRNode for IRGoto {
     }
 }
 impl IRInstruction for IRGoto {}
-
+#[derive(Clone, Debug)]
 pub struct IRConditionalJump {
     pub is_atomic: bool,
     pub _type: Box<dyn IRType>,
@@ -89,6 +91,7 @@ impl IRNode for IRConditionalJump {
     }
 }
 impl IRInstruction for IRConditionalJump {}
+#[derive(Clone, Debug)]
 pub struct IRNoOperate {}
 
 impl IRNoOperate {
@@ -109,6 +112,7 @@ impl IRNode for IRNoOperate {
     }
 }
 impl IRInstruction for IRNoOperate {}
+#[derive(Clone, Debug)]
 pub struct IRReturn {
     pub operand: Option<Box<dyn IROperand>>,
 }
@@ -134,7 +138,7 @@ impl IRNode for IRReturn {
     }
 }
 impl IRInstruction for IRReturn {}
-
+#[derive(Clone, Debug)]
 pub struct IRMalloc {
     pub size: Box<dyn IROperand>,
     pub target: Box<IRVirtualRegister>,
@@ -156,7 +160,7 @@ impl IRNode for IRMalloc {
     }
 }
 impl IRInstruction for IRMalloc {}
-
+#[derive(Clone, Debug)]
 pub struct IRFree {
     pub ptr: Box<dyn IROperand>,
 }
@@ -177,7 +181,7 @@ impl IRNode for IRFree {
     }
 }
 impl IRInstruction for IRFree {}
-
+#[derive(Clone, Debug)]
 pub struct IRRealloc {
     pub ptr: Box<dyn IROperand>,
     pub size: Box<dyn IROperand>,
@@ -205,7 +209,7 @@ impl IRNode for IRRealloc {
     }
 }
 impl IRInstruction for IRRealloc {}
-
+#[derive(Clone, Debug)]
 pub struct IRSet {
     pub _type: Box<dyn IRType>,
     pub address: Box<dyn IROperand>,
@@ -237,7 +241,7 @@ impl IRNode for IRSet {
 }
 
 impl IRInstruction for IRSet {}
-
+#[derive(Clone, Debug)]
 pub struct IRGet {
     pub _type: Box<dyn IRType>,
     pub address: Box<dyn IROperand>,
@@ -267,7 +271,7 @@ impl IRNode for IRGet {
     }
 }
 impl IRInstruction for IRGet {}
-
+#[derive(Clone, Debug)]
 pub struct IRSetVirtualRegister {
     pub source: Box<dyn IROperand>,
     pub target: Box<IRVirtualRegister>,
@@ -291,6 +295,7 @@ impl IRNode for IRSetVirtualRegister {
 
 impl IRInstruction for IRSetVirtualRegister {}
 
+#[derive(Clone, Debug)]
 pub enum IRTypeCastKind {
     ZeroExtend,
     SignExtend,
@@ -314,6 +319,7 @@ impl Display for IRTypeCastKind {
         write!(f, "{}", s)
     }
 }
+#[derive(Clone, Debug)]
 pub struct IRTypeCast {
     pub kind: IRTypeCastKind,
     pub original_type: Box<dyn IRType>,
@@ -353,7 +359,7 @@ impl IRNode for IRTypeCast {
     }
 }
 impl IRInstruction for IRTypeCast {}
-
+#[derive(Clone, Debug)]
 pub struct IRStackAllocate {
     pub size: Box<dyn IROperand>,
     pub target: Box<IRVirtualRegister>,
@@ -374,6 +380,7 @@ impl IRNode for IRStackAllocate {
     }
 }
 impl IRInstruction for IRStackAllocate {}
+#[derive(Clone, Debug)]
 pub enum IRCalculateOperator {
     ADD,
     SUB,
@@ -405,6 +412,7 @@ impl Display for IRCalculateOperator {
         write!(f, "{}", s)
     }
 }
+#[derive(Clone, Debug)]
 pub struct IRCalculate {
     pub is_atomic: bool,
     pub operator: IRCalculateOperator,
@@ -453,6 +461,7 @@ impl IRNode for IRCalculate {
     }
 }
 impl IRInstruction for IRCalculate {}
+#[derive(Clone, Debug)]
 pub struct IRIncrease {
     pub _type: Box<dyn IRType>,
     pub operand: Box<dyn IROperand>,
@@ -486,6 +495,7 @@ impl IRNode for IRIncrease {
     }
 }
 impl IRInstruction for IRIncrease {}
+#[derive(Clone, Debug)]
 pub struct IRDecrease {
     pub _type: Box<dyn IRType>,
     pub operand: Box<dyn IROperand>,
@@ -519,6 +529,7 @@ impl IRNode for IRDecrease {
     }
 }
 impl IRInstruction for IRDecrease {}
+#[derive(Clone, Debug)]
 pub struct IRNot {
     pub is_atomic: bool,
     pub _type: Box<dyn IRType>,
@@ -558,6 +569,7 @@ impl IRNode for IRNot {
     }
 }
 impl IRInstruction for IRNot {}
+#[derive(Clone, Debug)]
 pub struct IRNegate {
     pub is_atomic: bool,
     pub _type: Box<dyn IRType>,
@@ -597,6 +609,7 @@ impl IRNode for IRNegate {
     }
 }
 impl IRInstruction for IRNegate {}
+#[derive(Clone, Debug)]
 pub struct IRInvoke {
     pub return_type: Box<dyn IRType>,
     pub address: Box<dyn IROperand>,
@@ -651,7 +664,7 @@ impl IRNode for IRInvoke {
     }
 }
 impl IRInstruction for IRInvoke {}
-
+#[derive(Clone, Debug)]
 pub struct IRAsm {
     pub code: String,
     pub types: Vec<Box<dyn IRType>>,
