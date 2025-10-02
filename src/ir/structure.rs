@@ -4,6 +4,7 @@ use crate::ir::types::IRType;
 use std::fmt;
 use std::fmt::{Display, Formatter};
 
+#[derive(Debug)]
 pub struct IRField {
     pub name: String,
     pub _type: Box<dyn IRType>,
@@ -26,6 +27,7 @@ impl IRNode for IRField {
     }
 }
 
+#[derive(Debug)]
 pub struct IRStructure {
     pub name: String,
     pub fields: Vec<IRField>,
