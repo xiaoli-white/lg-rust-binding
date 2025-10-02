@@ -72,7 +72,7 @@ pub struct IRModule {
     pub entry_point: Option<String>,
 }
 impl IRModule {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Self {
             structures: IndexMap::new(),
             constant_pool: Box::new(IRConstantPool { entries: vec![] }),
