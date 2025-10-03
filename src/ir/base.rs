@@ -143,7 +143,7 @@ impl IRNode for IRBasicBlock {
         }
     }
 }
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct IRControlFlowGraph {
     pub basic_blocks: IndexMap<String, Box<IRBasicBlock>>,
     pub out_edges: BTreeMap<Box<IRBasicBlock>, Vec<Box<IRBasicBlock>>>,
@@ -179,7 +179,7 @@ impl fmt::Display for IRControlFlowGraph {
         )
     }
 }
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct IRFunction {
     pub return_type: Box<dyn IRType>,
     pub name: String,
