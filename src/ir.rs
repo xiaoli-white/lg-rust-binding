@@ -107,6 +107,16 @@ impl IRModule {
             entry_point: None,
         }
     }
+
+    #[inline]
+    pub fn push_function(&mut self, func: IRFunction) {
+        self.functions.insert(func.name.clone(), Box::new(func));
+    }
+
+    #[inline]
+    pub fn push_struct(&mut self, structure: IRStructure) {
+        self.structures.insert(structure.name.clone(), Box::new(structure));
+    }
 }
 
 impl Display for IRModule {
