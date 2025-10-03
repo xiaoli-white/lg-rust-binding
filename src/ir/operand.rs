@@ -164,6 +164,7 @@ impl IRNode for IRVirtualTable {
     }
 }
 impl IROperand for IRVirtualTable {}
+
 #[derive(Clone, Debug)]
 pub struct IRInterfaceTableEntry {
     pub name: String,
